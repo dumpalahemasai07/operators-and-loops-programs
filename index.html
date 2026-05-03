@@ -1,0 +1,46 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Open ZIP File</title>
+</head>
+<body>
+
+<h2>Upload ZIP File</h2>
+
+<input type="file" id="zipInput" accept=".zip">
+<ul id="fileList"></ul>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<script>
+document.getElementById("zipInput").addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    const fileList = document.getElementById("fileList");
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        const zip = new JSZip();
+
+        zip.loadAsync(e.target.result).then(function(contents) {
+            fileList.innerHTML = "";
+
+            Object.keys(contents.files).forEach(function(filename) {
+                const li = document.createElement("li");
+                li.textContent = filename;
+                fileList.appendChild(li);
+            });
+        });
+    };
+
+    reader.readAsArrayBuffer(file);
+});
+</script>
+
+</body>
+</html>
+```
